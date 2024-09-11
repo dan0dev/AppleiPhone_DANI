@@ -136,7 +136,10 @@ const VideoCarousel = () => {
 				break;
 
 			case 'video-reset':
-				setVideo((pre) => ({ ...pre, videoId: 0, isLastVideo: false }));
+				setVideo((pre) => ({ ...pre, isLastVideo: false }));
+				setTimeout(() => {
+					setVideo((pre) => ({ ...pre, videoId: 0, isPlaying: true }));
+				}, 0);
 				break;
 
 			case 'pause':

@@ -1,11 +1,15 @@
 import { useGSAP } from '@gsap/react';
 import { chipImg, frameImg, frameVideo } from '../utils';
 import gsap from 'gsap';
-import { useRef } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef, useEffect } from 'react';
 import { animateWithGsap } from '../utils/animations';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const HowItWorks = () => {
 	const videoRef = useRef();
+
 	useGSAP(() => {
 		gsap.from('#chip', {
 			scrollTrigger: {
@@ -24,6 +28,39 @@ const HowItWorks = () => {
 			duration: 1,
 			ease: 'power2.inOut',
 		});
+
+		// Control video playback based on scroll position
+		ScrollTrigger.create({
+			trigger: videoRef.current,
+			start: 'top bottom', // When the video enters the viewport
+			end: 'bottom top', // When the video exits the viewport
+			onEnter: () => {
+				if (videoRef.current) {
+					videoRef.current.play(); // Play the video when it becomes visible
+				}
+			},
+			onLeave: () => {
+				if (videoRef.current) {
+					videoRef.current.pause(); // Pause the video when it leaves the viewport
+				}
+			},
+			onEnterBack: () => {
+				if (videoRef.current) {
+					videoRef.current.play(); // Resume playing when scrolling back up
+				}
+			},
+			onLeaveBack: () => {
+				if (videoRef.current) {
+					videoRef.current.pause(); // Pause when scrolling back out of view
+				}
+			},
+		});
+	}, []);
+
+	useEffect(() => {
+		if (videoRef.current) {
+			videoRef.current.loop = true; // Ensure the video loops
+		}
 	}, []);
 
 	return (
@@ -58,13 +95,14 @@ const HowItWorks = () => {
 								muted
 								autoPlay
 								ref={videoRef}
+								loop // Ensure the video loops
 							>
 								<source src={frameVideo} type="video/mp4" />
 							</video>
 						</div>
 					</div>
 
-					<p className="text-gray fontt-semibold text-center mt-3">Honkai: Star Rail</p>
+					<p className="text-gray font-semibold text-center mt-3">Honkai: Star Rail</p>
 				</div>
 
 				<div className="hiw-text-container">
