@@ -47,4 +47,4 @@ const Navbar = () => {
 
 export default Navbar;
 
-// not responsive yet
+// not responsive yet 2
