@@ -46,3 +46,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// not responsive yet
